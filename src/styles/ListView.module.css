@@ -2,44 +2,90 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    flex-direction: row-reverse;
     gap: 2rem;
-    padding: 1.5rem;
     padding: 2rem 4rem;
     min-width: 0;
 }
 
-/* Left side - Search Box */
-.searchBox {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Left side - Search Container */
+.searchContainer {
     position: relative;
-    flex: 1;
-
-
-    .searchBar {
-        padding: 12px 16px;
-        font-size: 16px;
-        border: 2px solid #e1e5e9;
-        border-radius: 8px;
-        outline: none;
-        transition: all 0.3s ease;
-        width: 100%;
-        max-width: 600px;
-        background-color: white;
-    }
-
-    .searchBar:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    }
-
-    .searchBar::placeholder {
-        color: #6c757d;
-        font-style: italic;
-    }
-
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 600px;
 }
+
+.searchBar {
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    background-color: white;
+    z-index: 2;
+}
+
+.searchBar:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.searchBar::placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.movieList {
+    margin-top: 1.5rem;
+    background-color: white;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.movieItem {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e1e5e9;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.movieItem:hover {
+    background-color: #f8f9fa;
+}
+
+.movieItem:last-child {
+    border-bottom: none;
+}
+
+.movieTitle {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    font-size: 16px;
+}
+
+.movieDetails {
+    font-size: 14px;
+    color: #666;
+}
+
+.noResults {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+
+
 
 
 /* Right side - Controls Container */
@@ -48,7 +94,6 @@
     flex-direction: column;
     gap: 1rem;
     align-items: flex-end;
-    
 }
 
 /* Sort Dropdown Styles */
@@ -124,9 +169,9 @@
         padding: 1.25rem;
     }
     
-    .searchBar {
+    /* .searchBar {
         max-width: 500px;
-    }
+    } */
     
     .controlsContainer {
         gap: 0.75rem;
@@ -150,13 +195,18 @@
         padding: 1rem;
     }
     
-    .searchBox {
+    .searchContainer {
         width: 100%;
         justify-content: center;
+        max-width: 400px;
     }
     
-    .searchBar {
-        max-width: 400px;
+    .movieList {
+        margin-top: 1rem;
+    }
+    
+    .movieItem {
+        padding: 12px 16px;
     }
     
     .controlsContainer {
@@ -188,7 +238,7 @@
     .searchBar {
         font-size: 14px;
         padding: 10px 12px;
-        max-width: 300px;
+        /* max-width: 300px; */
     }
     
     .controlsContainer {
