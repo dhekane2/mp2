@@ -70,32 +70,50 @@ function ListView() {
     const deferredSearchTerm = useDeferredValue(searchTerm);
 
 
+    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+
     const filteredMovies = useMemo(() => {
-        const q = deferredSearchTerm.trim().toLowerCase();
-        if(!q) return MOVIES;
-        return MOVIES.filter(movie => movie.title.toLowerCase().includes(q))
+        const q = normalize(deferredSearchTerm.trim());
+        if(!q) return [];
+        return MOVIES.filter(movie => normalize(movie.title).includes(q))
     },[deferredSearchTerm])
+
 
     const results = useMemo(() => {
         const isAsc = sortOrder === "asc";
-        const withIndex = filteredMovies.map((item, idx) => ({ item, idx }));
+        const q = normalize(deferredSearchTerm.trim());
+        const startsRe = new RegExp("^" + esc(q)); // match from start
+        const wordRe = new RegExp("\\b" + esc(q)); // match from word boundary
 
-        withIndex.sort((movie1, movie2) => {
+        const tieBreaker = (title: string) => {
+            const t = normalize(title);
+            if (startsRe.test(t)) return 0;   
+            if (wordRe.test(t))   return 1;   
+            return 2;                         
+        };
+
+        const SortedResults = [...filteredMovies].sort((movie1, movie2) => {   
             let c = 0;
 
             if (sortBy === "title") {
-                c = movie1.item.title.localeCompare(movie2.item.title, undefined, { sensitivity: "base" });
-            } else {
-                c = movie1.item.rank - movie2.item.rank;
+                const ta = tieBreaker(movie1.title);
+                const tb = tieBreaker(movie2.title);
+                if (ta !== tb) return ta - tb;
+
+                c = movie1.title.localeCompare(movie2.title, undefined, { sensitivity: "base" });
+                
+            }else{ // sortBy "rank"
+                c = movie1.rank - movie2.rank;
             }
 
-            if (c !== 0) return isAsc ? c : -c;
-            return movie1.idx - movie2.idx; // tie breaker
+            return isAsc ? c : -c;
         });
 
-        return withIndex.map(({ item }) => item);
-        
-    }, [filteredMovies, sortBy, sortOrder]);
+        return SortedResults
+    }, [filteredMovies, sortBy, sortOrder, deferredSearchTerm]);
+
     
 
 
