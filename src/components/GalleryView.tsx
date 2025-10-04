@@ -10,7 +10,6 @@ function FilterSwitch() {
     const [activeGenre, setActiveGenre] = useState("All");
 
     return (
-        
         <div className={styles.filters}>
             {genreList.map((genre) => (
                 <button
@@ -19,9 +18,7 @@ function FilterSwitch() {
                     onClick = {() => setActiveGenre(genre)}
                 >
                     {genre}
-                </button>
-
-                
+                </button>                
             )) 
             }
             
@@ -35,9 +32,28 @@ function GalleryView() {
             <FilterSwitch />
             
             <div className={styles.gallery}>
-                {/* Gallery items would be rendered here */}
-                <p>Gallery items will be displayed here.</p>
+                <div className={styles.card}>p1</div>
+                <div className={styles.card}>p2</div>
+                <div className={styles.card}>p3</div>
+                <div className={styles.card}>p4</div>
+                <div className={styles.card}>p5</div>
+                <div className={styles.card}>p6</div>
+                
+                <div className={styles.card}>p1</div>
+                <div className={styles.card}>p2</div>
+                <div className={styles.card}>p3</div>
+                <div className={styles.card}>p4</div>
+                <div className={styles.card}>p5</div>
+                <div className={styles.card}>p6</div>
 
+                
+                <div className={styles.card}>p1</div>
+                <div className={styles.card}>p2</div>
+                <div className={styles.card}>p3</div>
+                <div className={styles.card}>p4</div>
+                <div className={styles.card}>p5</div>
+                <div className={styles.card}>p6</div>
+                
             </div>
             
         </div>
