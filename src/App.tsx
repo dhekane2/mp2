@@ -3,9 +3,8 @@ import 'normalize.css';
 import './App.css';
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Route,
-  
   Routes
 } from "react-router-dom";
 import Header from './components/Header';
@@ -16,12 +15,13 @@ import GalleryView from './components/GalleryView';
 function App() {
   return (
     <div className='App'>
-      <Router basename='/mp2'>
+      <Router>
         <Header/>
 
         <Routes>
           <Route path="/list" element={<ListView />} />
           <Route path="/gallery" element={<GalleryView />} />
+          <Route path="*" element={<ListView />} />
         </Routes>
 
         </Router>
