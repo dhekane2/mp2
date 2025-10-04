@@ -13,7 +13,7 @@ const tmdb_client = axios.create({
 // add API key to each request
 tmdb_client.interceptors.request.use((config) => {
 
-  const apiKey = (process.env as any).REACT_APP_TMDB_API_KEY;
+  const apiKey = process.env.REACT_APP_TMDB_API_KEY;
   if (!apiKey) throw new Error("API key is required");
 
   config.params = {...(config.params || {}), api_key: apiKey};
