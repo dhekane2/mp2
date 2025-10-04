@@ -38,6 +38,8 @@ tmdb_client.interceptors.response.use(
 
 export default tmdb_client;
 
+export const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
+
 export type tmdbMovie = {
     id: number;
     title: string;
@@ -49,4 +51,10 @@ export type tmdbMovie = {
     vote_average: number;
     popularity: number;
     vote_count: number;
+    genre_ids: number[];
+}
+
+export type tmdbGenre = {
+    id: number;
+    name: string;
 }

@@ -3,7 +3,7 @@ import { useState , useMemo, useDeferredValue } from "react";
 import useDebouncedValue from "../utils/hooks/useDebouncedValue";
 import styles from '../styles/ListView.module.css';
 import {tmdbMovie} from '../utils/tmdbClient';
-import fetchTopMovies from "../utils/fetchTopMovies";
+import fetchTopMovies from "../utils/apis/fetchTopMovies";
 import { useEffect } from "react";
 
 

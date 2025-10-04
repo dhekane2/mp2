@@ -116,11 +116,45 @@
         font-size: 14px;
         color: #333;
         border-radius: 2px;
-        background: rgb(171, 103, 103);
+        background: rgb(149, 147, 147);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         
         height: 320px;
+
+        .poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                z-index: 2;
+            }
+        }
+        .noPoster {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e1e5e9;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+
         
         @media (min-width: 480px) {
             height: 300px;
@@ -135,5 +169,6 @@
         }
         
     }
+
 }
 
