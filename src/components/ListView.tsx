@@ -1,84 +1,57 @@
 import React from "react";
 import { useState , useMemo, useDeferredValue } from "react";
+import useDebouncedValue from "../utils/hooks/useDebouncedValue";
 import styles from '../styles/ListView.module.css';
+import {tmdbMovie} from '../utils/tmdbClient';
+import fetchTopMovies from "../utils/fetchTopMovies";
+import { useEffect } from "react";
 
-type Movie = {
-    id: number;
-    title: string;
-    rank: number;
-    year: number;
-}
-
-const MOVIES: Movie[] = [
-  // Classics
-  { id: 1,  title: "The Shawshank Redemption", rank: 9.3, year: 1994 },
-  { id: 2,  title: "The Godfather",                       rank: 9.2, year: 1972 },
-  { id: 3,  title: "The Dark Knight",                     rank: 9.0, year: 2008 },
-  { id: 4,  title: "12 Angry Men",                        rank: 9.0, year: 1957 },
-  { id: 5,  title: "A Angry Men sequel",                        rank: 9.1, year: 1957 },
-  { id: 6,  title: "Schindler's List",                    rank: 8.9, year: 1993 },
-  { id: 7,  title: "Pulp Fiction",                        rank: 8.9, year: 1994 },
-  { id: 8,  title: "The Lord of the Rings: The Return of the King", rank: 8.9, year: 2003 },
-  { id: 9,  title: "The Matrix",                          rank: 8.7, year: 1999 },
-  { id: 10,  title: "One Flew Over the Cuckoo's Nest",     rank: 8.7, year: 1975 },
-
-  // Popular modern
-  { id: 11, title: "Inception",                           rank: 8.7, year: 2010 },
-  { id: 12, title: "Interstellar",                        rank: 8.6, year: 2014 },
-  { id: 13, title: "Parasite",                            rank: 8.6, year: 2019 },
-  { id: 14, title: "Whiplash",                            rank: 8.5, year: 2014 },
-  { id: 15, title: "The Prestige",                        rank: 8.5, year: 2006 },
-  { id: 16, title: "Avengers: Endgame",                   rank: 8.4, year: 2019 },
-  { id: 17, title: "Mad Max: Fury Road",                  rank: 8.1, year: 2015 },
-  { id: 18, title: "The Batman",                          rank: 7.8, year: 2022 },
-
-  // Animation (punctuation/diacritics)
-  { id: 19, title: "Spirited Away",                       rank: 8.6, year: 2001 },
-  { id: 20, title: "WALL·E",                              rank: 8.4, year: 2008 },
-  { id: 21, title: "Coco",                                rank: 8.4, year: 2017 },
-  { id: 22, title: "Up",                                  rank: 8.2, year: 2009 },
-  { id: 23, title: "Spider-Man: Into the Spider-Verse",   rank: 8.4, year: 2018 },
-  { id: 24, title: "The Lion King",                       rank: 8.5, year: 1994 },
-
-  // Non-English / accents
-  { id: 25, title: "Amélie",                              rank: 8.3, year: 2001 },
-  { id: 26, title: "Léon: The Professional",              rank: 8.5, year: 1994 },
-  { id: 27, title: "Oldboy",                              rank: 8.4, year: 2003 },
-  { id: 28, title: "City of God",                         rank: 8.6, year: 2002 },
-  { id: 29, title: "3 Idiots",                            rank: 8.4, year: 2009 },
-
-  // Mixed cases / numbers / ties for stable sort testing
-  { id: 30, title: "Se7en",                               rank: 8.6, year: 1995 },
-  { id: 31, title: "Fight Club",                          rank: 8.8, year: 1999 },
-  { id: 32, title: "Forrest Gump",                        rank: 8.8, year: 1994 },
-  { id: 33, title: "A Beautiful Mind",                    rank: 8.2, year: 2001 },
-  { id: 34, title: "Batman Begins",                       rank: 8.2, year: 2005 },
-  { id: 35, title: "The Intouchables",                    rank: 8.5, year: 2011 },
-
-  // Low-rank outlier to test extremes
-  { id: 36, title: "Cats",                                rank: 2.7, year: 2019 },
-];
 
 type sortKey = "title" | "rank";
 type sortOrder = "asc" | "desc";
 
+const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 
 function ListView() {
     const [searchTerm, setSearchTerm] = useState("");
+    
+    const debouncedSearchTerm = useDebouncedValue(searchTerm, 200); // help with performance on large lists
+    const deferredSearchTerm = useDeferredValue(debouncedSearchTerm); // avoid flicker when typing fast
+
+    const [MOVIES, setMOVIES] = useState<tmdbMovie[] | []>([]);
     const [sortBy, setSortBy] = useState<sortKey>("title");
     const [sortOrder, setSortOrder] = useState<sortOrder>("asc");
-    const deferredSearchTerm = useDeferredValue(searchTerm);
+    
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
+    
+    const loadMovies = async () => {
+        setError(null);
+        try{
+            setLoading(true);
+            const movies = await fetchTopMovies();
+            setMOVIES(movies);
+        }catch(e){
+            console.error("Failed to fetch movies", e);
+            setError("Failed to load movies. Please try again later.");
+        }finally{
+            setLoading(false);
+        }
+    };
 
-    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    useEffect(() => {
+        loadMovies();
+    },[]);
 
 
     const filteredMovies = useMemo(() => {
         const q = normalize(deferredSearchTerm.trim());
         if(!q) return [];
         return MOVIES.filter(movie => normalize(movie.title).includes(q))
-    },[deferredSearchTerm])
+    },[deferredSearchTerm, MOVIES])
 
 
     const results = useMemo(() => {
@@ -105,7 +78,7 @@ function ListView() {
                 c = movie1.title.localeCompare(movie2.title, undefined, { sensitivity: "base" });
                 
             }else{ // sortBy "rank"
-                c = movie1.rank - movie2.rank;
+                c = movie1.vote_average - movie2.vote_average;
             }
 
             return isAsc ? c : -c;
@@ -114,8 +87,18 @@ function ListView() {
         return SortedResults
     }, [filteredMovies, sortBy, sortOrder, deferredSearchTerm]);
 
-    
-
+    // removes duplicates from results
+    const uniqueResults = useMemo(() => {
+        const seen = new Set<number>();
+        const out: tmdbMovie[] = [];
+        for (const m of results) {
+            if (!seen.has(m.id)) {
+                seen.add(m.id);
+                out.push(m);
+            }
+        }
+        return out;
+    }, [results]);
 
 
     return (
@@ -133,13 +116,20 @@ function ListView() {
             />
         
             <div className={styles.movieList}>
-                {searchTerm ? (
-                    results.length > 0 ? (
-                        results.map(movie => (
+                {loading ? (
+                    <div className={styles.noResults} aria-busy="true">Loading movies…</div>
+                ) : error ? (
+                    <div className={styles.noResults}>
+                        <div>{error}</div>
+                        <button onClick={loadMovies} className={styles.retryButton}>Retry</button>
+                    </div>
+                ) : searchTerm ? (
+                    uniqueResults.length > 0 ? (
+                        uniqueResults.map(movie => (
                             <div key={movie.id} className={styles.movieItem}>
                                 <div className={styles.movieTitle}>{movie.title}</div>
                                 <div className={styles.movieDetails}>
-                                    Rank: {movie.rank} • Year: {movie.year}
+                                    Rank: {movie.vote_average} • Year: {movie.release_date?.slice(0,4) ?? '—'}
                                 </div>
                             </div>
                         ))

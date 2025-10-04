@@ -8,7 +8,6 @@
     min-width: 0;
 }
 
-/* Left side - Search Container */
 .searchContainer {
     position: relative;
     display: flex;
@@ -82,6 +81,17 @@
     text-align: center;
     color: #666;
     font-style: italic;
+}
+
+.retryButton {
+    margin-top: 12px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
 

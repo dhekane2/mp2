@@ -10,6 +10,7 @@ import {
 import Header from './components/Header';
 import ListView from './components/ListView';
 import GalleryView from './components/GalleryView';
+import DetailsView from './components/DetailsView';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/list" element={<ListView />} />
           <Route path="/gallery" element={<GalleryView />} />
+          <Route path="/details/1" element={<DetailsView/>} />
           <Route path="*" element={<ListView />} />
         </Routes>
 
