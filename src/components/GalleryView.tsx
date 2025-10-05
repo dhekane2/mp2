@@ -8,7 +8,7 @@ import { TMDB_IMAGE_BASE, tmdbGenre } from "../utils/tmdbClient";
 import { tmdbMovie } from "../utils/tmdbClient";
 import fetchGenres from "../utils/apis/fetchGenres";
 import { readMoviesFromLS } from "../utils/readMoviesFromLS";
-
+import { useNavigate } from "react-router-dom";
 
 const genreList = ["All", "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Romance", "Science Fiction", "Thriller"];
 
@@ -21,6 +21,10 @@ function GalleryView() {
     const [loading, setLoading] = useState(false);
     const [genre, setGenre] = useState<tmdbGenre[] | []>([]);
     const [movies, setMovies] = useState<tmdbMovie[] | []>([]);
+
+    const navigate = useNavigate();
+
+    
     
     const loadGenres = async () => {
         setError(null);
@@ -99,7 +103,11 @@ function GalleryView() {
                     </div>
                 ) : (
                     filtered.map(movie => (
-                        <div key={movie.id} className={styles.card}>
+                        <div key={movie.id} 
+                            className={styles.card}
+                            onClick={() => navigate(`/details/${movie.id}`)}
+                            
+                            >
                             {movie.poster_path ? (
                                 <img
                                     src={`${TMDB_IMAGE_BASE}/w200${movie.poster_path}`}
