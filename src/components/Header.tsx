@@ -9,7 +9,9 @@ import {
 function Header() {
   return (
       <header className={styles.header}>
-        <h1>TMDB Movie reviews application</h1>
+        <Link to="/">
+          <h1>TMDB Movie reviews application</h1>
+        </Link>
         <nav>
           <ul>
             <li>
