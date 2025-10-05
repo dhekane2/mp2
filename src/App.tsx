@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/list" element={<ListView />} />
           <Route path="/gallery" element={<GalleryView />} />
-          <Route path="/details/1" element={<DetailsView/>} />
+          <Route path="/details/:id" element={<DetailsView />} />
           <Route path="*" element={<ListView />} />
         </Routes>
 

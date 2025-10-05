@@ -5,7 +5,7 @@ import styles from '../styles/ListView.module.css';
 import {tmdbMovie} from '../utils/tmdbClient';
 import fetchTopMovies from "../utils/apis/fetchTopMovies";
 import { useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 type sortKey = "title" | "rank";
 type sortOrder = "asc" | "desc";
@@ -26,6 +26,8 @@ function ListView() {
     
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const navigate = useNavigate();
 
     
     const loadMovies = async () => {
@@ -126,7 +128,10 @@ function ListView() {
                 ) : searchTerm ? (
                     uniqueResults.length > 0 ? (
                         uniqueResults.map(movie => (
-                            <div key={movie.id} className={styles.movieItem}>
+                            <div key={movie.id} 
+                                className={styles.movieItem}
+                                onClick={() => navigate(`/details/${movie.id}`)}
+                                 >
                                 <div className={styles.movieTitle}>{movie.title}</div>
                                 <div className={styles.movieDetails}>
                                     Rank: {movie.vote_average} • Year: {movie.release_date?.slice(0,4) ?? '—'}

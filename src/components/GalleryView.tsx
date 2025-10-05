@@ -7,27 +7,10 @@ import { useMemo } from "react";
 import { TMDB_IMAGE_BASE, tmdbGenre } from "../utils/tmdbClient";
 import { tmdbMovie } from "../utils/tmdbClient";
 import fetchGenres from "../utils/apis/fetchGenres";
+import { readMoviesFromLS } from "../utils/readMoviesFromLS";
 
 
 const genreList = ["All", "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Romance", "Science Fiction", "Thriller"];
-
-
-function readMoviesFromLS(){
-    const LS_KEY = "movie_cache_v1";
-    try{
-        const cachedData = localStorage.getItem(LS_KEY);
-        if (cachedData) {
-            const parsed =  JSON.parse(cachedData);
-            if(parsed?.movieList && Array.isArray(parsed.movieList)){
-                return parsed.movieList as tmdbMovie[];
-            }
-        }
-        return [];
-    } catch (error) {
-        console.error("Failed to read movies from localStorage", error);
-        return [];
-    }
-}
 
 
 function GalleryView() {
