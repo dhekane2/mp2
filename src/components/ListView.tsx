@@ -132,14 +132,28 @@ function ListView() {
                                 className={styles.movieItem}
                                 onClick={() => navigate(`/details/${movie.id}`)}
                                  >
-                                <div className={styles.movieTitle}>{movie.title}</div>
-                                <div className={styles.movieDetails}>
-                                    Rank: {movie.vote_average} • Year: {movie.release_date?.slice(0,4) ?? '—'}
+                                {movie.poster_path ? (
+                                    <img
+                                        src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                                        alt={`${movie.title} poster`}
+                                        className={styles.moviePoster}
+                                    />
+                                ) : (
+                                    <div className={styles.noPoster}>No Poster</div>
+                                )}
+                                
+                                <div className={styles.movieInfo}>
+                                    <div className={styles.movieTitle}>{movie.title}</div>
+                                    <div className={styles.movieDetails}>
+                                        Rank: {movie.vote_average} • Year: {movie.release_date?.slice(0,4) ?? '—'}
+                                    </div>
                                 </div>
+                                
+                                
                             </div>
                         ))
                     ) : (
-                        <div className={styles.noResults}>
+                        <div className={styles.noResults} role="alert">
                             No movies found matching "{searchTerm}"
                         </div>
                     )
